@@ -1,0 +1,25 @@
+name: KS — Validar inventário central (sem deploy)
+on:
+  pull_request:
+    paths:
+      - "infra/servicos.json"
+      - "scripts/validar-inventario.mjs"
+      - ".github/workflows/inventario-ks-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "infra/servicos.json"
+      - "scripts/validar-inventario.mjs"
+      - ".github/workflows/inventario-ks-ci.yml"
+permissions:
+  contents: read
+jobs:
+  validar-inventario:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/validar-inventario.mjs
