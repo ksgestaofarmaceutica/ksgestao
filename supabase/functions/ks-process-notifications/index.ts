@@ -112,6 +112,33 @@ Deno.serve(async (req: Request) => {
   if (!uuidPattern.test(id)) return response(400,{error:"ID de notificação inválido"},origin);
   const {data:n,error:nErr}=await db.from("ks_process_notifications").select("*").eq("id",id).single();
   if (nErr || !n) return response(404,{error:"Notificação não encontrada"},origin);
+  if (action==="detail") {
+   const {data:history,error:historyError}=await db.from("ks_process_notification_events")
+     .select("id,event_type,created_at,actor_uid,details").eq("notification_id",id)
+     .order("created_at",{ascending:true}).limit(100);
+   if (historyError) throw historyError;
+   const {data:attachments,error:attachmentError}=await db.from("ks_process_notification_documents")
+     .select("document_id").eq("notification_id",id);
+   if (attachmentError) throw attachmentError;
+   const ids=(attachments||[]).map(d=>d.document_id);
+   const {process,documents}=await verifyDocuments(n.process_id,ids);
+   return response(200,{notification:{
+    id:n.id,process_id:n.process_id,recipient_email:n.recipient_email,
+    event_type:n.event_type,subject:n.subject,message:n.message,status:n.status,
+    approved_at:n.approved_at,sent_at:n.sent_at,created_at:n.created_at,
+    provider_message_id:n.provider_message_id,error_message:n.error_message
+   },process:{id:process.id,protocolo:process.protocolo,orgao:process.orgao,assunto:process.assunto},
+    documents:documents.map(d=>({id:d.id,title:d.titulo,mime_type:d.mime_type})),history},origin);
+  }
+  if (action==="cancel") {
+   if (!["draft","queued"].includes(n.status)) return response(409,{error:"Somente rascunhos ou avisos ainda não enviados podem ser cancelados"},origin);
+   const {data:cancelled,error:cancelError}=await db.from("ks_process_notifications")
+     .update({status:"cancelled"}).eq("id",id).eq("status",n.status)
+     .select("id").maybeSingle();
+   if (cancelError || !cancelled) return response(409,{error:"Notificação já alterada"},origin);
+   await audit(id,"cancelled",uid);
+   return response(200,{id,status:"cancelled"},origin);
+  }
   if (action==="approve") {
    if (n.status!=="draft" && n.status!=="failed") return response(409,{error:"Somente rascunhos ou falhas podem ser aprovados"},origin);
    const {data:links,error:linksError}=await db.from("ks_process_notification_documents").select("document_id").eq("notification_id",id);
