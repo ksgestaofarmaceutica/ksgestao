@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-14",
+  "policy": {
+    "production_freeze": false,
+    "automatic_deletions": false,
+    "unverified_sources_may_deploy": false,
+    "require_rollback_plan": true
+  },
+  "services": [
+    {
+      "id": "ksgestaofarma-institucional",
+      "type": "cloudflare_worker",
+      "status": "active",
+      "environment": "production",
+      "entrypoints": [
+        "ksgestaofarma.com.br"
+      ],
+      "routes": [
+        "ksgestaofarma.com.br/*"
+      ],
+      "source": {
+        "repository": "ksgestaofarmaceutica/screenshot-match",
+        "branch": "prod-institucional-ksgestaofarma",
+        "confidence": "confirmed",
+        "evidence": "Cloudflare Git configuration and wrangler.jsonc"
+      },
+      "deployment": {
+        "mechanism": "cloudflare_builds",
+        "command": "npx wrangler deploy",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ks-farmaconnect-producao",
+      "type": "cloudflare_worker",
+      "status": "active",
+      "environment": "production",
+      "entrypoints": [
+        "admin.ksgestaofarma.com.br",
+        "fp.ksgestaofarma.com.br"
+      ],
+      "routes": [
+        "admin.ksgestaofarma.com.br/*",
+        "fp.ksgestaofarma.com.br/*"
+      ],
+      "source": {
+        "repository": "ksgestaofarmaceutica/screenshot-match",
+        "branch": "feat-farmaconsult-empresa-pix-20261102",
+        "confidence": "confirmed_via_workflow",
+        "evidence": ".github/workflows/ks-farmaconnect-producao.yml pins checkout branch and deploys wrangler.producao.jsonc"
+      },
+      "deployment": {
+        "mechanism": "github_actions_manual",
+        "workflow": "ks-farmaconnect-producao.yml",
+        "config": "wrangler.producao.jsonc",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ks-portal-sistemas",
+      "type": "cloudflare_worker",
+      "status": "active",
+      "environment": "production",
+      "entrypoints": [
+        "admin.ksgestaofarma.com.br/sistemas",
+        "ksgestaofarma.com.br/sistemas"
+      ],
+      "routes": [
+        "admin.ksgestaofarma.com.br/sistemas*",
+        "ksgestaofarma.com.br/sistemas*"
+      ],
+      "source": {
+        "repository": null,
+        "branch": null,
+        "confidence": "unverified",
+        "evidence": "Cloudflare route screenshot only"
+      },
+      "deployment": {
+        "mechanism": "unknown",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ks-farmaconnect-homologacao",
+      "type": "cloudflare_worker",
+      "status": "requires_verification",
+      "environment": "staging",
+      "entrypoints": [
+        "ks-farmaconnect-homologacao.ksgestaofarmaceutica.workers.dev"
+      ],
+      "routes": [],
+      "source": {
+        "repository": "ksgestaofarmaceutica/screenshot-match",
+        "branch": "feat-farmaconsult-empresa-pix-20261102",
+        "confidence": "confirmed_via_workflow",
+        "evidence": ".github/workflows/ks-farmaconnect-homologacao.yml"
+      },
+      "deployment": {
+        "mechanism": "github_actions_manual",
+        "workflow": "ks-farmaconnect-homologacao.yml",
+        "config": "wrangler.homologacao.jsonc",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ks-gestao-crm-isolado",
+      "type": "cloudflare_worker",
+      "status": "requires_verification",
+      "environment": "unknown",
+      "entrypoints": [
+        "ks-gestao-crm-isolado.ksgestaofarmaceutica.workers.dev"
+      ],
+      "routes": [],
+      "source": {
+        "repository": null,
+        "branch": null,
+        "confidence": "unverified",
+        "evidence": "Cloudflare list screenshot"
+      },
+      "deployment": {
+        "mechanism": "unknown",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ksgestaofarmaceutica-screenshot-match",
+      "type": "cloudflare_worker",
+      "status": "requires_verification",
+      "environment": "unknown",
+      "entrypoints": [
+        "ksgestaofarmaceutica-screenshot-match.ksgestaofarmaceutica.workers.dev"
+      ],
+      "routes": [],
+      "source": {
+        "repository": null,
+        "branch": null,
+        "confidence": "unverified",
+        "evidence": "Cloudflare list screenshot"
+      },
+      "deployment": {
+        "mechanism": "unknown",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "screenshot-match",
+      "type": "cloudflare_worker",
+      "status": "requires_verification",
+      "environment": "unknown",
+      "entrypoints": [
+        "screenshot-match.ksgestaofarmaceutica.workers.dev"
+      ],
+      "routes": [],
+      "source": {
+        "repository": null,
+        "branch": null,
+        "confidence": "unverified",
+        "evidence": "Cloudflare list screenshot"
+      },
+      "deployment": {
+        "mechanism": "unknown",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    },
+    {
+      "id": "ks-supabase-main",
+      "type": "supabase",
+      "status": "active",
+      "environment": "production",
+      "entrypoints": [],
+      "routes": [],
+      "source": {
+        "repository": null,
+        "branch": null,
+        "confidence": "unverified",
+        "evidence": "Supabase project skysdjpfqpmavtqbzxpg"
+      },
+      "deployment": {
+        "mechanism": "supabase",
+        "automatic_deploy_verified": false
+      },
+      "deletion_allowed": false
+    }
+  ]
+}
