@@ -56,3 +56,10 @@
 ## Política de limpeza final
 
 Aplicar critérios do arquivo `retirada-segura.md`. Nada será apagado automaticamente.
+
+
+## Complemento do inventário de Supabase
+
+Consulta direta ao projeto `skysdjpfqpmavtqbzxpg`: **61 tabelas públicas** e **16 Edge Functions**. Funções identificadas: `farmaconsulta-login-cnpj`, `farmaconsulta-create-pix`, `farmaconsulta-pix-webhook`, `farmaconsulta-orders-test`, `ks-archive-secure-file`, `ks-archive-demo-provision`, `ks-store-admin-provision`, `ks-store-staff-provision`, `ks-store-staff-login`, `ks-demo-staff-provision`, `ks-demo-staff-login`, `ks-insights-agent`, `ks-insights-client-admin`, `ks-insights-updates`, `ks-insights-online-price-pilot`, `ks-process-notifications`.
+
+**Ponto de atenção:** neste projeto, `clients`, `administrative_processes`, `documents` e `ks_process_notifications` registram 0 linhas segundo as métricas disponíveis. Antes de migrar ou apagar, verificar se a interface realmente utiliza este projeto ou outro backend/ambiente. Contagem de 0 linhas não significa inutilização.
