@@ -30,3 +30,19 @@
 ## Publicação
 
 Nenhum deploy Cloudflare foi realizado por este commit. O código principal do painel não foi localizado nas integrações conectadas.
+
+
+## Interface pronta no repositório
+
+- `KsProcessosNotificacoes.tsx`: componente React integrado às tabelas existentes e à Edge Function.
+- Propriedade obrigatória `supabase`: passe a instância **autenticada do painel**, sem criar segundo login.
+- A interface busca clientes, contatos, processos e documentos respeitando as RLS existentes.
+- Exemplo de incorporação à rota administrativa existente:
+
+```tsx
+import KsProcessosNotificacoes from "./integracoes/processos/KsProcessosNotificacoes";
+// Em uma rota já protegida por autenticação administrativa/MFA:
+<KsProcessosNotificacoes supabase={supabase} />
+```
+
+A aplicação hospedada na Cloudflare precisa importar o componente usando o caminho correto relativo a seu projeto. A rota e o menu devem ser adaptados à estrutura real; nenhuma implantação automática foi configurada.
