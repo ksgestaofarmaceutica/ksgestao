@@ -1,0 +1,9 @@
+recurso,tipo,origem_codigo_confirmada,dominio_ou_rota,ambiente,dependencias_verificadas,backup_verificado,alternativa_homologada,corte_realizado,periodo_observacao_concluido,autorizado_apagar,status
+ksgestaofarma-institucional,worker,sim,ksgestaofarma.com.br,producao,nao,nao,nao,nao,nao,nao,ativo_preservar
+ks-farmaconnect-producao,worker,nao,admin.ksgestaofarma.com.br / fp.ksgestaofarma.com.br,producao,nao,nao,nao,nao,nao,nao,ativo_preservar
+ks-portal-sistemas,worker,nao,admin.ksgestaofarma.com.br/sistemas* / ksgestaofarma.com.br/sistemas*,producao,nao,nao,nao,nao,nao,nao,ativo_preservar
+ks-farmaconnect-homologacao,worker,nao,workers.dev,homologacao,nao,nao,nao,nao,nao,nao,verificar_uso
+ks-gestao-crm-isolado,worker,nao,workers.dev,indefinido,nao,nao,nao,nao,nao,nao,verificar_uso
+ksgestaofarmaceutica-screenshot-match,worker,nao,workers.dev,indefinido,nao,nao,nao,nao,nao,nao,verificar_uso
+screenshot-match,worker,nao,workers.dev,indefinido,nao,nao,nao,nao,nao,nao,verificar_uso
+skysdjpfqpmavtqbzxpg,supabase,nao,banco_principal,producao,nao,nao,nao,nao,nao,nao,ativo_preservar
