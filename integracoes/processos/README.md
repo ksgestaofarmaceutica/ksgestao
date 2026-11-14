@@ -46,3 +46,16 @@ import KsProcessosNotificacoes from "./integracoes/processos/KsProcessosNotifica
 ```
 
 A aplicação hospedada na Cloudflare precisa importar o componente usando o caminho correto relativo a seu projeto. A rota e o menu devem ser adaptados à estrutura real; nenhuma implantação automática foi configurada.
+
+
+## Consolidação de backend (versão 2 — 14/11/2026)
+
+A cópia versionada da Edge Function está em `supabase/functions/ks-process-notifications/index.ts`. O deploy ativo foi confirmado como versão 2 no Supabase.
+
+- Arquivos em anexos: assinatura binária verificada para PDF/PNG/JPEG e nome de arquivo ajustado à extensão real.
+- Falhas sem confirmação do provedor: preservam status `sending` para conciliação manual, evitando reenvio involuntário.
+- A API segue exigindo JWT e autenticação administrativa MFA (AAL2).
+- **Pendente:** obter código real do Cloudflare Pages/Workers, compilar e incorporar a interface ao painel existente.
+- **Pendente:** configurar e validar Resend e remetente; desenvolver confirmação de entrega por webhook e fluxo de conciliação.
+- **Pendente:** homologação com conta administrativa e documentos de teste autorizados.
+- **Não concluir produção:** até todos esses itens estarem aprovados, manter `KS_PROCESS_EMAIL_ENABLED` diferente de `true`.
