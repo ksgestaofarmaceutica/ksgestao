@@ -35,5 +35,7 @@ export function ksProcessNotifications(supabase: SupabaseClient) {
     }) => call<ResponseBase>({action:"create",...input}),
     approve: (notification_id: string) => call<ResponseBase>({action:"approve", notification_id}),
     send: (notification_id: string) => call<ResponseBase>({action:"send", notification_id}),
+    cancel: (notification_id: string) => call<ResponseBase>({action:"cancel", notification_id}),
+    detail: (notification_id: string) => call<ResponseBase & {notification: KsNotification; history: Array<{id:number;event_type:string;created_at:string;details:Record<string,unknown>}>; documents:Array<{id:string;title:string;mime_type:string|null}>}>({action:"detail",notification_id}),
   };
 }
