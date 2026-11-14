@@ -25,6 +25,7 @@ export default function KsProcessosNotificacoes({supabase,onClose}:Props) {
   const [documents,setDocuments]=useState<Document[]>([]);
   const [notifications,setNotifications]=useState<KsNotification[]>([]);
   const [enabled,setEnabled]=useState(false);
+  const [detail,setDetail]=useState<{notification: KsNotification;history:Array<{id:number;event_type:string;created_at:string}>;documents:Array<{id:string;title:string}>}|null>(null);
   const [processId,setProcessId]=useState("");
   const [recipient,setRecipient]=useState("");
   const [eventType,setEventType]=useState<KsNotificationEvent>("protocolado");
@@ -77,13 +78,19 @@ export default function KsProcessosNotificacoes({supabase,onClose}:Props) {
     } catch (e) {setError(e instanceof Error?e.message:"Erro ao registrar");}
     finally {setBusy(false);}
   };
-  const action=async(n:KsNotification,kind:"approve"|"send")=>{
+  const showDetail=async(id:string)=>{
+    setBusy(true);setError("");
+    try { const result=await api.detail(id); setDetail(result); }
+    catch(e){setError(e instanceof Error?e.message:"Falha ao consultar histórico");}
+    finally{setBusy(false);}
+  };
+  const action=async(n:KsNotification,kind:"approve"|"send"|"cancel")=>{
     if(kind==="send"&&!enabled) return;
-    if(!window.confirm(kind==="approve"?"Aprovar esta notificação? Nenhum e-mail será enviado nesta etapa.":`Confirmar envio para ${n.recipient_email}? Esta ação pode enviar um e-mail real.`)) return;
+    if(!window.confirm(kind==="approve"?"Aprovar esta notificação? Nenhum e-mail será enviado nesta etapa.":kind==="cancel"?"Cancelar esta notificação ainda não enviada?":`Confirmar envio para ${n.recipient_email}? Esta ação pode enviar um e-mail real.`)) return;
     setBusy(true);setError("");setSuccess("");
     try {
-      if(kind==="approve") await api.approve(n.id); else await api.send(n.id);
-      setSuccess(kind==="approve"?"Notificação aprovada.":"Solicitação de envio processada. Consulte o status.");await load();
+      if(kind==="approve") await api.approve(n.id); else if(kind==="cancel") await api.cancel(n.id); else await api.send(n.id);
+      setSuccess(kind==="approve"?"Notificação aprovada.":kind==="cancel"?"Notificação cancelada.":"Solicitação de envio processada. Consulte o status.");setDetail(null);await load();
     } catch(e) {setError(e instanceof Error?e.message:"Operação não concluída");}
     finally {setBusy(false);}
   };
@@ -129,11 +136,21 @@ export default function KsProcessosNotificacoes({supabase,onClose}:Props) {
           <td style={{padding:10,borderBottom:"1px solid #edf2f7"}}>{n.subject}</td>
           <td style={{padding:10,borderBottom:"1px solid #edf2f7",color:colors[n.status]||"#475569",fontWeight:700}}>{n.status}</td>
           <td style={{padding:10,borderBottom:"1px solid #edf2f7",whiteSpace:"nowrap"}}>
+            <button style={{...btnStyle,padding:"7px 9px",fontSize:12,marginRight:6,background:"#475569"}} disabled={busy} onClick={()=>void showDetail(n.id)}>Histórico</button>
             {(n.status==="draft"||n.status==="failed")&&<button style={{...btnStyle,padding:"7px 9px",fontSize:12,marginRight:6}} disabled={busy} onClick={()=>void action(n,"approve")}>Aprovar</button>}
+            {(n.status==="draft"||n.status==="queued")&&<button style={{...btnStyle,padding:"7px 9px",fontSize:12,marginRight:6,background:"#9f1239"}} disabled={busy} onClick={()=>void action(n,"cancel")}>Cancelar</button>}
             {n.status==="queued"&&<button style={{...btnStyle,padding:"7px 9px",fontSize:12,background:enabled?"#047857":"#94a3b8",cursor:enabled?"pointer":"not-allowed"}} disabled={busy||!enabled} title={!enabled?"Envio bloqueado até homologação":"Enviar comunicado"} onClick={()=>void action(n,"send")}>Enviar</button>}
           </td>
         </tr>)}</tbody>
       </table></div>}
     </section>
+    {detail&&<section style={{...blockStyle,marginTop:18}} aria-label="Histórico da notificação">
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><h2 style={{fontSize:18}}>Histórico do comunicado</h2><button style={{...btnStyle,background:"#475569"}} onClick={()=>setDetail(null)}>Fechar</button></div>
+      <p><b>Destinatário:</b> {detail.notification.recipient_email}<br/><b>Assunto:</b> {detail.notification.subject}<br/><b>Situação:</b> {detail.notification.status}</p>
+      <h3 style={{fontSize:14}}>Documentos vinculados</h3>
+      <ul>{detail.documents.map(d=><li key={d.id}>{d.title}</li>)}</ul>
+      <h3 style={{fontSize:14}}>Eventos registrados</h3>
+      <ol>{detail.history.map(h=><li key={h.id}>{new Date(h.created_at).toLocaleString("pt-BR")} — {h.event_type}</li>)}</ol>
+    </section>}
   </main>;
 }
