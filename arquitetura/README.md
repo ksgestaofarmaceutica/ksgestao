@@ -1,3 +1,5 @@
+> **Atualização de segurança e origem central (14/11/2026):** este repositório `ksgestao` é **público** e deve permanecer limitado a inventário não sensível, documentação e referências. O código operacional privado e a governança técnica de deploy foram centralizados inicialmente no repositório **privado** `ksgestaofarmaceutica/screenshot-match`, dentro de `ops/` (PR #16). Não migrar código-fonte privado, credenciais nem backups para `ksgestao`. A consolidação completa em um único repositório privado ainda está em andamento; os Workers atuais permanecem ativos.
+
 # KS Gestão Farmacêutica — consolidação controlada
 
 **Estado: fase 1 (inventário e preparação), nenhuma migração executada.**
