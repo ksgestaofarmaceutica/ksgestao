@@ -21,3 +21,12 @@ A análise dos arquivos **reais** do repositório `ksgestaofarmaceutica/screensh
 ## Regra para scripts e agentes
 
 Nenhuma automação de CI na central `ksgestao` possui credenciais de deploy ou permissões de exclusão. A proteção é deliberada. Não duplicar segredos, tokens ou chaves service_role em arquivos do GitHub.
+
+
+## Homologação de código confirmada em 14/11/2026
+
+- PR de origem correta: [screenshot-match #15](https://github.com/ksgestaofarmaceutica/screenshot-match/pull/15), base `feat-farmaconsult-empresa-pix-20261102`, 5 arquivos alterados, merge pendente.
+- GitHub Actions: run `43628207133` do workflow `KS ADM — verificar integração sem publicar`.
+- **Resultado: success** na instalação reproduzível, testes, validação dos componentes CNPJ/notificações, build e `wrangler deploy --dry-run` com a configuração de produção.
+- Não houve deploy real de Worker nem habilitação de envio de e-mails.
+- Bloqueadores remanescentes: preview funcional do Worker admin, autenticação MFA, CNPJ consultado no navegador, processos/documentos vinculados, domínio remetente e envio controlado. Somente então aprovar merge/publicação pela pipeline existente.
